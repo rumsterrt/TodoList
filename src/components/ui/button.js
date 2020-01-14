@@ -5,9 +5,9 @@ import { theme } from 'styles/theme'
 const Button = styled.button`
     text-align: center;
     overflow: hidden;
-    color: ${() => theme.text.reverse};
-    background-color: ${() => theme.bg.alt};
-    border: 1px solid ${() => theme.bg.border};
+    color: ${() => 'white'};
+    background-color: ${() => '#ffa69e'};
+    border: none;
     border-radius: 5px;
     height: 36px;
     width: ${props => props.width || 'max-content'};
@@ -23,7 +23,9 @@ const Button = styled.button`
         !props.disabled &&
         css`
             &:hover {
-                box-shadow: inset 0 0 0 2em ${() => theme.bg.default};
+                box-shadow: 0 0 1px 2px ${() => '#ffa69e'};
+                color: #ffa69e;
+                background-color: white;
             }
 
             &:focus {

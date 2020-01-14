@@ -1,6 +1,8 @@
 import React from 'react'
-import TodoListList from '../views/todoListList'
 import styled from 'styled-components'
+import { Switch, Route, Redirect } from 'react-router-dom'
+
+import Category from './category'
 
 const Wrapper = styled.div`
     margin: 0 auto;
@@ -34,7 +36,10 @@ const App = () => {
     return (
         <Wrapper>
             <Container>
-                <TodoListList />
+                <Switch>
+                    <Redirect from="/" exact to="/categories" />
+                    <Route path="/categories" render={props => <Category {...props} />} />
+                </Switch>
             </Container>
         </Wrapper>
     )

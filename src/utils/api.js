@@ -36,8 +36,8 @@ export const sendRequest = ({ endpoint, method, body, credentials, headers = {} 
     let serializedBody = body
 
     // eslint-disable-next-line
-    if (body instanceof FormData === false && httpMethod !== methods[API_READ]) {
-        serializedBody = JSON.stringify(body) || undefined
+    if (body instanceof FormData === false) {
+        serializedBody = body || undefined
 
         headers['Content-Type'] = 'application/json'
     }

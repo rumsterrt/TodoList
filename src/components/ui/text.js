@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components'
 
 export default styled.div`
-    text-decoration: none;
+    text-decoration: ${props => props.textDecoration || 'none'};;
     font-family: ${props => (!props.inherit ? 'inherit' : 'inherit')};
-    color: ${props => props.color || (!props.inherit ? '#000926' : 'inherit')};
+    color: ${props => props.color || (!props.inherit ? '#ffa69e' : 'inherit')};
     font-size: ${props => props.fontSize || (!props.inherit ? '14px' : 'inherit')};
     font-weight: ${props => props.fontWeight || (!props.inherit ? 'normal' : 'inherit')};
     padding: ${props => props.padding || 0};

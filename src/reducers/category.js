@@ -1,8 +1,10 @@
 import { actionTypes } from 'actions/category'
+import uniqBy from 'lodash/uniqBy'
 
 const getInitState = () => ({
     nodes: [],
     isLoading: false,
+    hasMore: true,
     error: null,
     page: 0,
 })
@@ -20,33 +22,98 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isLoading: false,
-                nodes: [...state.nodes, ...payload.nodes],
+                nodes: uniqBy([...state.nodes, ...payload.nodes], 'id'),
+                hasMore: payload.nodes.length === payload.limit,
             }
         case actionTypes.GET_CATEGORIES_FAILURE:
             return {
                 ...state,
                 isLoading: false,
-                error: payload.error,
-            }
-        /*
-        case types.ADD_CATEGORY:
-            return {
-                ...state,
-                categories: [...state.categories, { id: state.categories.length + 1, text: payload.text }],
+                error: action.error,
             }
 
-        case types.REMOVE_CATEGORY:
-            return { ...state, categories: state.categories.filter(todo => todo.id !== payload.id) }
-
-        case types.EDIT_CATEGORY:
+        case actionTypes.GET_CATEGORY_REQUEST:
             return {
                 ...state,
-                categories: [
-                    ...state.categories.filter(todo => todo.id !== payload.id),
-                    { id: payload.id, text: payload.text },
-                ],
+                isLoading: true,
             }
-            */
+        case actionTypes.GET_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                nodes: uniqBy([...state.nodes, payload.node], 'id'),
+            }
+        case actionTypes.GET_CATEGORY_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.error,
+            }
+
+        case actionTypes.ADD_CATEGORY_REQUEST:
+            return {
+                ...state,
+                isLoading: true,
+            }
+
+        case actionTypes.ADD_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                nodes: [...state.nodes, payload],
+            }
+
+        case actionTypes.ADD_CATEGORY_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.error,
+            }
+
+        case actionTypes.REMOVE_CATEGORY_REQUEST:
+            return {
+                ...state,
+                isLoading: true,
+            }
+
+        case actionTypes.REMOVE_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                nodes: state.nodes.filter(item => item.id !== +payload.id),
+            }
+
+        case actionTypes.REMOVE_CATEGORY_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.error,
+            }
+
+        case actionTypes.EDIT_CATEGORY_REQUEST:
+            return {
+                ...state,
+                isLoading: true,
+            }
+
+        case actionTypes.EDIT_CATEGORY_SUCCESS:
+            const nodes = state.nodes
+            const editIndex = nodes.findIndex(item => item.id === +payload.id)
+
+            nodes[editIndex] = payload
+
+            return {
+                ...state,
+                isLoading: false,
+                nodes,
+            }
+
+        case actionTypes.EDIT_CATEGORY_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.error,
+            }
 
         default:
             return state

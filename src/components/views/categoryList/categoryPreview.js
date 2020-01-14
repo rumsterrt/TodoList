@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Text } from 'components/ui'
+import { useHistory } from 'react-router-dom'
 
 const PreviewStyled = styled.div`
     flex: 0 0 auto;
-    height: 100%;
     width: calc(100% / 3 - 20px / 3);
     background-color: white;
     border-radius: 5px;
@@ -19,6 +19,7 @@ const PreviewStyled = styled.div`
     padding: ${({ padding }) => padding + 'px'};
     display: flex;
     flex-direction: column;
+    cursor: pointer;
 `
 
 const getTextColor = ({ containerWidth, containerPercent, containerPadding, elemMarginLeft = 0 }) => {
@@ -29,9 +30,10 @@ const getTextColor = ({ containerWidth, containerPercent, containerPadding, elem
     return `linear-gradient(to right, white ${textPercent}%, #d0469f ${textPercent}%)`
 }
 
-const TodoListPreview = ({ name, totalTasks = 10, doneTasks = 6, padding = 20 }) => {
+const CategoryPreview = ({ data, totalTasks = 10, doneTasks = 6, padding = 20 }) => {
     const percent = parseInt((doneTasks / totalTasks) * 100),
-        [containerWidth, setContainerWidth] = useState(0)
+        [containerWidth, setContainerWidth] = useState(0),
+        history = useHistory()
 
     const textCommon = { containerWidth, containerPercent: percent, containerPadding: padding }
 
@@ -44,16 +46,17 @@ const TodoListPreview = ({ name, totalTasks = 10, doneTasks = 6, padding = 20 })
             }}
             percent={percent}
             padding={padding}
+            onClick={() => history.push(`/categories/${data.id}`)}
         >
             <Text gradientColor={getTextColor(textCommon)} flex="1 0 0">{`${totalTasks} Task`}</Text>
             <Text gradientColor={getTextColor(textCommon)} fontSize="100px" textAlign="center" flex="3 0 0">
                 {percent + '%'}
             </Text>
             <Text gradientColor={getTextColor(textCommon)} fontSize="30px" flex="1 0 0">
-                {name}
+                {data.name}
             </Text>
         </PreviewStyled>
     )
 }
 
-export default TodoListPreview
+export default CategoryPreview

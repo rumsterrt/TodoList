@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import symbols from 'styles/svg/symbols.svg'
 import { Button } from 'components/ui'
+import { useHistory } from 'react-router-dom'
 
 const AddButtonStyled = styled(Button)`
     flex: 0 0 auto;
@@ -33,8 +34,10 @@ const AddButtonStyled = styled(Button)`
 `
 
 const AddButton = () => {
+    const history = useHistory()
+
     return (
-        <AddButtonStyled>
+        <AddButtonStyled onClick={() => history.push('/categories/new')}>
             <svg width="50%" height="50%">
                 <use xlinkHref={symbols + '#add_button'} />
             </svg>
