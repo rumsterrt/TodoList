@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, Fragment } from 'react'
 import InfiniteScroll from '../../ui/infinityList'
 import { getTodos, addTodo } from 'actions/todolist'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +17,7 @@ const TodoList = ({ categoryId }) => {
     const list = useSelector(state => state.todolist.categories[categoryId] || state.todolist.template)
 
     const loadMoreTodos = useCallback(() => {
-        dispatch(getTodos({ categoryId, offset: list.nodes.length, limit: 2 }))
+        dispatch(getTodos({ categoryId, offset: list.nodes.length, limit: 1 }))
     }, [dispatch, categoryId, list])
 
     const [isAddNew, setIsAddNew] = useState(false)
@@ -31,23 +31,26 @@ const TodoList = ({ categoryId }) => {
     )
 
     return (
-        <StyledInfiniteScroll
-            type="vertical"
-            throttle={100}
-            threshold={300}
-            onLoadMore={loadMoreTodos}
-            hasMore={list.hasMore}
-            isLoading={list.isLoading}
-        >
+        <Fragment>
             {isAddNew ? (
                 <TodoView onAddNew={onAddTodo} />
             ) : (
                 <SvgButton width="35px" symbol="add_button" onClick={() => setIsAddNew(true)} />
             )}
-            {list.nodes.map(node => (
-                <TodoView key={node.id} {...node} />
-            ))}
-        </StyledInfiniteScroll>
+
+            <StyledInfiniteScroll
+                type="vertical"
+                throttle={100}
+                threshold={300}
+                onLoadMore={loadMoreTodos}
+                hasMore={list.hasMore}
+                isLoading={list.isLoading}
+            >
+                {list.nodes.map(node => (
+                    <TodoView key={node.id} {...node} />
+                ))}
+            </StyledInfiniteScroll>
+        </Fragment>
     )
 }
 

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Text } from 'components/ui'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import _get from 'lodash/get'
 
 const PreviewStyled = styled.div`
     flex: 0 0 auto;
@@ -30,10 +32,17 @@ const getTextColor = ({ containerWidth, containerPercent, containerPadding, elem
     return `linear-gradient(to right, white ${textPercent}%, #d0469f ${textPercent}%)`
 }
 
-const CategoryPreview = ({ data, totalTasks = 10, doneTasks = 6, padding = 20 }) => {
-    const percent = parseInt((doneTasks / totalTasks) * 100),
-        [containerWidth, setContainerWidth] = useState(0),
-        history = useHistory()
+const CategoryPreview = ({ id, padding = 20 }) => {
+    const data = useSelector(state => _get(state, `category.items.${id}`, {}))
+
+    const [containerWidth, setContainerWidth] = useState(0)
+    const history = useHistory()
+
+    if (!data) {
+        return null
+    }
+
+    const percent = data.totalTodos > 0 ? parseInt((data.completeTodos / data.totalTodos) * 100) : 0
 
     const textCommon = { containerWidth, containerPercent: percent, containerPadding: padding }
 
@@ -48,7 +57,7 @@ const CategoryPreview = ({ data, totalTasks = 10, doneTasks = 6, padding = 20 })
             padding={padding}
             onClick={() => history.push(`/categories/${data.id}`)}
         >
-            <Text gradientColor={getTextColor(textCommon)} flex="1 0 0">{`${totalTasks} Task`}</Text>
+            <Text gradientColor={getTextColor(textCommon)} flex="1 0 0">{`${data.totalTodos} Task`}</Text>
             <Text gradientColor={getTextColor(textCommon)} fontSize="100px" textAlign="center" flex="3 0 0">
                 {percent + '%'}
             </Text>

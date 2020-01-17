@@ -1,4 +1,5 @@
 import { sendRequest, API_READ, API_CREATE, API_UPDATE, API_DELETE } from 'utils/api'
+import { actionTypes as categoryActionTypes } from './category'
 
 const NS = '@todoList/todo'
 
@@ -37,6 +38,10 @@ export const addTodo = ({ categoryId, name }) => dispatch => {
                 type: actionTypes.ADD_TODO_SUCCESS,
                 payload: { id: data.id, name, categoryId },
             })
+            dispatch({
+                type: categoryActionTypes.UPDATE_TODOS_COUNT,
+                payload: { total: 1, categoryId },
+            })
         })
         .catch(e => {
             dispatch({
@@ -46,7 +51,7 @@ export const addTodo = ({ categoryId, name }) => dispatch => {
         })
 }
 
-export const removeTodo = ({ id, categoryId }) => dispatch => {
+export const removeTodo = ({ id, categoryId, isDone }) => dispatch => {
     dispatch({
         type: actionTypes.REMOVE_TODO_REQUEST,
     })
@@ -55,6 +60,10 @@ export const removeTodo = ({ id, categoryId }) => dispatch => {
             dispatch({
                 type: actionTypes.REMOVE_TODO_SUCCESS,
                 payload: { data, id, categoryId },
+            })
+            dispatch({
+                type: categoryActionTypes.UPDATE_TODOS_COUNT,
+                payload: { total: -1, complete: isDone ? -1 : 0, categoryId },
             })
         })
         .catch(e => {
@@ -70,13 +79,17 @@ export const editTodo = ({ id, categoryId, name, isDone }) => dispatch => {
         type: actionTypes.EDIT_TODO_REQUEST,
     })
     return sendRequest({ endpoint: `/todos/${id}`, method: API_UPDATE, body: { name, isDone, id } })
-        .then(({ data }) => {
-            const fields = { name, is_done: isDone }
+        .then(() => {
+            const fields = { name, isDone }
             Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key])
 
             dispatch({
                 type: actionTypes.EDIT_TODO_SUCCESS,
                 payload: { id, categoryId, ...fields },
+            })
+            dispatch({
+                type: categoryActionTypes.UPDATE_TODOS_COUNT,
+                payload: { complete: isDone !== undefined ? (isDone ? 1 : -1) : 0, categoryId },
             })
         })
         .catch(e => {

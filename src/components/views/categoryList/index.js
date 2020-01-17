@@ -34,8 +34,8 @@ const CategoryList = () => {
                 isLoading={lists.isLoading}
             >
                 <AddButton />
-                {lists.nodes.map((list, index) => (
-                    <TodoListPreview key={index} totalTasks={100} doneTasks={list.doneTasks} data={list} />
+                {lists.nodes.map(id => (
+                    <TodoListPreview key={id} totalTasks={100} id={id} />
                 ))}
             </CategoryListStyled>
         </div>

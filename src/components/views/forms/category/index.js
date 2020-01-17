@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import { Formik, Form } from 'formik'
-import { SvgButton, Flex, Text, InputField, Card, CardItem, Button } from 'components/ui'
+import { SvgButton, Flex, Text, InputField, Card, CardItem, Button, Page } from 'components/ui'
 import { addCategory, editCategory, getCategory } from 'actions/category'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
+import _get from 'lodash/get'
 
 const CategorySchema = () =>
     Yup.object().shape({
@@ -14,29 +14,11 @@ const CategorySchema = () =>
             .required('Required'),
     })
 
-const Wrapper = styled.div`
-    background: white;
-`
-
-const Header = styled.div`
-    position: sticky;
-    height: 64px;
-    z-index: 2;
-    background: transparent;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-`
-
 const Category = ({ categoryId }) => {
     const dispatch = useDispatch(),
         history = useHistory()
 
-    const category = useSelector(state =>
-        !categoryId ? {} : state.category.nodes.find(node => node.id === +categoryId) || {},
-    )
+    const category = useSelector(state => (!categoryId ? {} : _get(state, `category.items.${categoryId}`) || {}))
 
     const formik = {
         initialValues: {
@@ -59,8 +41,8 @@ const Category = ({ categoryId }) => {
     }, [categoryId, dispatch])
 
     return (
-        <Wrapper>
-            <Header>
+        <Page
+            header={
                 <Flex width="100%" height="100%" justify="space-between" align="center">
                     <SvgButton width="75px" symbol="back_button" onClick={() => history.push('/')} />
                     <Flex width="100%" height="100%" justify="center" align="center">
@@ -68,8 +50,8 @@ const Category = ({ categoryId }) => {
                     </Flex>
                     <div style={{ width: '75px' }} />
                 </Flex>
-            </Header>
-
+            }
+        >
             <Text fontSize="25px" textAlign="center">
                 {categoryId ? '' : 'Create new category for your tasks'}
             </Text>
@@ -92,7 +74,7 @@ const Category = ({ categoryId }) => {
                     </Card>
                 </Form>
             </Formik>
-        </Wrapper>
+        </Page>
     )
 }
 

@@ -5,5 +5,7 @@ import Text from './text'
 import Flex from './flex'
 import Card, { CardItem } from './card'
 import Checkbox from './checkbox'
+import ProgressBar from './progressBar'
+import Page from './page'
 
-export { InputField, Button, Input, SvgButton, Text, Flex, CardItem, Card, Checkbox }
+export { InputField, Button, Input, SvgButton, Text, Flex, CardItem, Card, Checkbox, ProgressBar, Page }

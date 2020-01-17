@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react'
 import styled from 'styled-components'
-import { SvgButton, Flex, Text } from 'components/ui'
-import { useSelector, useDispatch } from 'react-redux'
+import { SvgButton, Flex, Text, ProgressBar, Page } from 'components/ui'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import _get from 'lodash/get'
 import { removeCategory, getCategory } from 'actions/category'
@@ -12,20 +12,8 @@ const Wrapper = styled.div`
     background: white;
 `
 
-const Header = styled.div`
-    position: sticky;
-    height: 64px;
-    z-index: 2;
-    background: transparent;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-`
-
 const Category = ({ id }) => {
-    const data = useSelector(state => _get(state, 'category.nodes').find(node => node.id === +id)) || {},
+    const data = useSelector(state => _get(state, `category.items.${id}`, {}), shallowEqual),
         history = useHistory(),
         dispatch = useDispatch()
 
@@ -44,26 +32,32 @@ const Category = ({ id }) => {
 
     return (
         <Wrapper>
-            <Header>
-                <Flex width="100%" height="100%" justify="space-between" align="center">
-                    <SvgButton width="75px" symbol="back_button" onClick={() => history.push('/')} />
-                    <Flex width="100%" height="100%" justify="flex-end" align="center">
-                        <SvgButton
-                            width="75px"
-                            symbol="edit_button"
-                            onClick={() => history.push(`/categories/${id}/edit`)}
-                        />
-                        <SvgButton width="75px" symbol="delete_button" onClick={deleteHandler} />
+            <Page
+                header={
+                    <Flex width="100%" height="100%" justify="space-between" align="center">
+                        <SvgButton width="75px" symbol="back_button" onClick={() => history.push('/')} />
+                        <Flex width="100%" height="100%" justify="flex-end" align="center">
+                            <SvgButton
+                                width="75px"
+                                symbol="edit_button"
+                                onClick={() => history.push(`/categories/${id}/edit`)}
+                            />
+                            <SvgButton width="75px" symbol="delete_button" onClick={deleteHandler} />
+                        </Flex>
                     </Flex>
-                </Flex>
-            </Header>
-            <Text fontSize="25px" textAlign="center">
-                {data.name}
-            </Text>
-            <Text fontSize="20px" textAlign="center">
-                {data.description}
-            </Text>
-            <TodoList categoryId={id} />
+                }
+            >
+                <Text fontSize="25px" textAlign="center">
+                    {data.name}
+                </Text>
+                <Text fontSize="20px" textAlign="center">
+                    {data.description}
+                </Text>
+                <ProgressBar
+                    percent={data && data.totalTodos > 0 ? parseInt((data.completeTodos / data.totalTodos) * 100) : 0}
+                />
+                <TodoList categoryId={id} />
+            </Page>
         </Wrapper>
     )
 }

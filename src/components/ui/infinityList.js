@@ -4,7 +4,6 @@ import _throttle from 'lodash/throttle'
 
 const List = styled.div`
     width: 100%;
-    padding: 20px;
 
     display: flex;
     flex-direction: ${({ type }) => (type === 'vertical' ? 'column' : 'row')};
@@ -34,7 +33,7 @@ const InfiniteScroll = ({
             const height = parentNode.current.getBoundingClientRect().height
             const top = sentinel.current.getBoundingClientRect().top
 
-            if (hasMore && top && top - height < threshold) {
+            if (hasMore && ((top && top - height < threshold) || loadMore)) {
                 onLoadMore()
             }
 
@@ -46,7 +45,7 @@ const InfiniteScroll = ({
         if (hasMore && left && left - width < threshold) {
             onLoadMore()
         }
-    }, [hasMore, isLoading, onLoadMore, threshold, type])
+    }, [hasMore, isLoading, onLoadMore, threshold, type, loadMore])
 
     useEffect(() => {
         if (!parentNode) {
@@ -67,13 +66,10 @@ const InfiniteScroll = ({
     }, [parentNode, throttle])
 
     useEffect(() => {
-        if (!loadMore) {
-            return
-        }
         checkWindowScroll()
 
         setLoadMore(false)
-    }, [loadMore, checkWindowScroll])
+    }, [checkWindowScroll])
 
     const sentinelDiv = <div ref={sentinel} />
 

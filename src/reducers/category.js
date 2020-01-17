@@ -1,8 +1,9 @@
 import { actionTypes } from 'actions/category'
-import uniqBy from 'lodash/uniqBy'
+import uniq from 'lodash/uniq'
 
 const getInitState = () => ({
-    nodes: [],
+    items: {}, //id => category
+    nodes: [], //ids for pagination
     isLoading: false,
     hasMore: true,
     error: null,
@@ -22,7 +23,8 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isLoading: false,
-                nodes: uniqBy([...state.nodes, ...payload.nodes], 'id'),
+                nodes: uniq([...state.nodes, ...payload.nodes.map(node => node.id)]),
+                items: { ...state.items, ...payload.nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {}) },
                 hasMore: payload.nodes.length === payload.limit,
             }
         case actionTypes.GET_CATEGORIES_FAILURE:
@@ -41,7 +43,7 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isLoading: false,
-                nodes: uniqBy([...state.nodes, payload.node], 'id'),
+                items: { ...state.items, [payload.node.id]: payload.node },
             }
         case actionTypes.GET_CATEGORY_FAILURE:
             return {
@@ -60,7 +62,8 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isLoading: false,
-                nodes: [...state.nodes, payload],
+                items: { ...state.items, [payload.id]: payload },
+                nodes: [...state.nodes, payload.id],
             }
 
         case actionTypes.ADD_CATEGORY_FAILURE:
@@ -80,7 +83,8 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isLoading: false,
-                nodes: state.nodes.filter(item => item.id !== +payload.id),
+                nodes: state.nodes.filter(item => item !== +payload.id),
+                items: { ...state.items, [payload.id]: undefined },
             }
 
         case actionTypes.REMOVE_CATEGORY_FAILURE:
@@ -97,15 +101,14 @@ export default (state = getInitState(), action) => {
             }
 
         case actionTypes.EDIT_CATEGORY_SUCCESS:
-            const nodes = state.nodes
-            const editIndex = nodes.findIndex(item => item.id === +payload.id)
+            const items = state.items
 
-            nodes[editIndex] = payload
+            items[payload.id] = payload
 
             return {
                 ...state,
                 isLoading: false,
-                nodes,
+                items,
             }
 
         case actionTypes.EDIT_CATEGORY_FAILURE:
@@ -113,6 +116,25 @@ export default (state = getInitState(), action) => {
                 ...state,
                 isLoading: false,
                 error: action.error,
+            }
+
+        case actionTypes.UPDATE_TODOS_COUNT:
+            const item = state.items[payload.categoryId]
+
+            if (!item) {
+                return state
+            }
+
+            return {
+                ...state,
+                items: {
+                    ...state.items,
+                    [payload.categoryId]: {
+                        ...item,
+                        totalTodos: item.totalTodos + (payload.total || 0),
+                        completeTodos: item.completeTodos + (payload.complete || 0),
+                    },
+                },
             }
 
         default:

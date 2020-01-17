@@ -29,7 +29,11 @@ const StyledInput = styled.input`
         css`
             border: none;
             background: ${() => theme.bg.wash};
-        `}
+        `};
+
+    &::placeholder {
+        opacity: 10%;
+    }
 `
 
 const Input = ({ type = 'text', error = false, readOnly = false, ...props }) => {

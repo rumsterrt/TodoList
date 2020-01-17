@@ -21,7 +21,7 @@ export default (state = getInitState(), action) => {
 
     const categodyOld =
         (payload.categoryId && state.categories[payload.categoryId]) ||
-        (_get(payload, 'node.list_id') && state.categories[_get(payload, 'node.list_id')]) ||
+        (_get(payload, 'node.categoryId') && state.categories[_get(payload, 'node.categoryId')]) ||
         categoryTodosTemplate
 
     switch (action.type) {
@@ -74,7 +74,7 @@ export default (state = getInitState(), action) => {
                 ...state,
                 categories: {
                     ...state.categories,
-                    [_get(payload, 'node.list_id')]: {
+                    [_get(payload, 'node.categoryId')]: {
                         ...categodyOld,
                         isLoading: false,
                         nodes: uniqBy([...categodyOld.nodes, payload.node], 'id'),

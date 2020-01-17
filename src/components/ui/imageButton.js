@@ -1,8 +1,9 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import symbols from 'styles/svg/symbols.svg'
+import symbols from 'styles/svg'
 
 const Button = styled.button`
+    position: relative;
     text-align: center;
     overflow: hidden;
     background-color: transparent;
@@ -10,9 +11,13 @@ const Button = styled.button`
     height: 36px;
     width: ${props => props.width || 'max-content'};
     cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
-    padding: '0 5px';
+    padding: 0 5px;
 
-    svg {
+    & svg {
+        width: ${({ svgIcon = {} }) => svgIcon.width || '100%'};
+        height: ${({ svgIcon = {} }) => svgIcon.height || '100%'};
+        margin-right: ${props => (props.hasChild ? '10px' : '0')};
+        position: relative;
         fill: #ffa69e;
         transition: 0.25s;
     }
@@ -32,10 +37,16 @@ const Button = styled.button`
         `}
 `
 
-export default ({ symbol, ...props }) => (
-    <Button {...props}>
-        <svg width="100%" height="100%">
-            <use xlinkHref={symbols + '#' + symbol} />
-        </svg>
-    </Button>
-)
+export default ({ symbol, ...props }) => {
+    const SvgIcon = symbols[symbol]
+
+    if (!SvgIcon) {
+        return <div />
+    }
+
+    return (
+        <Button {...props}>
+            <SvgIcon />
+        </Button>
+    )
+}

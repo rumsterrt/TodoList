@@ -5,13 +5,13 @@ import { useDispatch } from 'react-redux'
 import { editTodo, removeTodo } from 'actions/todolist'
 
 const StyledContainer = styled(Flex)`
-    padding: 10px;
+    padding: 10px 0;
     &:not(:last-child) {
         margin-bottom: 5px;
     }
 `
 
-const TodoView = ({ id, name, is_done, list_id, onAddNew }) => {
+const TodoView = ({ id, name, isDone, categoryId, onAddNew }) => {
     const dispatch = useDispatch()
 
     const [isEdit, setIsEdit] = useState(false)
@@ -19,14 +19,14 @@ const TodoView = ({ id, name, is_done, list_id, onAddNew }) => {
 
     const onChangeTodo = useCallback(
         fields => {
-            dispatch(editTodo({ categoryId: list_id, id, ...fields }))
+            dispatch(editTodo({ categoryId, id, ...fields }))
         },
-        [dispatch, id, list_id],
+        [dispatch, id, categoryId],
     )
 
     const onRemoveClick = useCallback(() => {
-        dispatch(removeTodo({ id, categoryId: list_id }))
-    }, [dispatch, id, list_id])
+        dispatch(removeTodo({ id, categoryId, isDone }))
+    }, [dispatch, id, categoryId, isDone])
 
     const onSaveEdit = useCallback(() => {
         if (name === nameEdit || !nameEdit) {
@@ -43,10 +43,10 @@ const TodoView = ({ id, name, is_done, list_id, onAddNew }) => {
 
     return (
         <StyledContainer maxWidth align="center">
-            <Checkbox checked={is_done} onChange={(e, checked) => onChangeTodo({ isDone: checked })} />
             {!isEdit && !onAddNew ? (
                 <Fragment>
-                    <Text flex="1 0 0" textDecoration={is_done ? 'line-through' : undefined}>
+                    <Checkbox checked={isDone} onChange={(e, checked) => onChangeTodo({ isDone: checked })} />
+                    <Text flex="1 0 0" textDecoration={isDone ? 'line-through' : undefined}>
                         {name}
                     </Text>
                     <SvgButton width="35px" symbol="edit_button" onClick={() => setIsEdit(true)} />
@@ -54,7 +54,11 @@ const TodoView = ({ id, name, is_done, list_id, onAddNew }) => {
                 </Fragment>
             ) : (
                 <Fragment>
-                    <Input value={nameEdit} onChange={e => setNameEdit(e.target.value)} />
+                    <Input
+                        value={nameEdit}
+                        placeholder={onAddNew ? 'Input new todo name' : ''}
+                        onChange={e => setNameEdit(e.target.value)}
+                    />
                     <SvgButton width="35px" symbol="save_button" onClick={onSaveEdit} />
                 </Fragment>
             )}
