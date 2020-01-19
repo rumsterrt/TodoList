@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import symbols from 'styles/svg'
+import { theme } from 'styles/theme'
 
 const Button = styled.button`
     position: relative;
@@ -18,7 +19,7 @@ const Button = styled.button`
         height: ${({ svgIcon = {} }) => svgIcon.height || '100%'};
         margin-right: ${props => (props.hasChild ? '10px' : '0')};
         position: relative;
-        fill: #ffa69e;
+        fill: ${theme.bg.default};
         transition: 0.25s;
     }
 
@@ -27,7 +28,7 @@ const Button = styled.button`
         css`
             &:hover {
                 svg {
-                    fill: #d0469f;
+                    fill: ${theme.bg.border};
                 }
             }
 

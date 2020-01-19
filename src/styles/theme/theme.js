@@ -4,11 +4,12 @@ const theme = {
     },
     text: {
         default: '#24292E',
-        reverse: 'white',
+        reverse: '#ffffff',
     },
     bg: {
         default: '#ffa69e',
-        reverse: 'white',
+        reverse: '#ffffff',
+        border: '#d0469f',
     },
 }
 

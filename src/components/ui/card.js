@@ -1,9 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { theme } from 'styles/theme'
 
 const Card = styled.div`
     border-radius: 2px;
-    background-color: #ffffff;
+    background-color: ${theme.bg.reverse};
     padding: ${props => props.padding || '32px 25px 48px 24px'};
     position: relative;
     margin-bottom: 16px;
@@ -12,12 +13,12 @@ const Card = styled.div`
         position: absolute;
         top: 16px;
         right: 14px;
-        color: #5c97eb;
+        color: ${theme.text.default};
         font-size: 12px;
         font-weight: 400;
 
         &.necessary {
-            color: #d0469f;
+            color: ${theme.bg.border};
         }
     }
     & > *:not(:last-child) {
@@ -62,7 +63,7 @@ export const CardItem = styled.div`
     & > label,
     > p,
     > h3 {
-        color: #ffa69e;
+        color: ${theme.bg.default};
         font-family: Inter;
         font-style: normal;
         font-weight: 500;
@@ -76,7 +77,7 @@ export const CardItem = styled.div`
                 &:after {
                     content: '*';
                     position: absolute;
-                    color: #e986c6;
+                    color: ${theme.bg.border};
                 }
             `};
     }
@@ -90,27 +91,4 @@ export const CardItem = styled.div`
 
 export const CardRowBlock = styled.div`
     ${RowBlock};
-`
-
-export const CardError = styled.p`
-    color: #d0469f;
-    font-size: 12px;
-    font-weight: 400;
-    margin: 8px 0 0 10px;
-`
-
-export const CardHint = styled.div`
-    position: relative;
-    color: rgba(0, 0, 0, 0.87);
-    font-size: 12px;
-    font-weight: 400;
-    margin-top: 20px;
-    flex: 1 1 100%;
-    padding-left: 10px;
-    &::before {
-        content: '*';
-        position: absolute;
-        left: 0;
-        color: #e986c6;
-    }
 `

@@ -25,7 +25,8 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
     width: 100%;
-    min-height: calc(100% - 64px);
+    max-height: 100%;
+    height: 100%;
     position: absolute;
     right: 0;
     display: flex;

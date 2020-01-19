@@ -3,6 +3,9 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
     background: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 `
 
 const Header = styled.div`
@@ -18,7 +21,11 @@ const Header = styled.div`
 `
 
 const Body = styled.div`
-    margin: 10px;
+    padding: 10px;
+    height: calc(100% - 64px);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
 `
 
 const Page = ({ header, children, className }) => {

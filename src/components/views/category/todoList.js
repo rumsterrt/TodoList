@@ -1,14 +1,12 @@
 import React, { useCallback, useState, Fragment } from 'react'
-import InfiniteScroll from '../../ui/infinityList'
 import { getTodos, addTodo } from 'actions/todolist'
 import { useDispatch, useSelector } from 'react-redux'
 import TodoView from './todoView'
 import styled from 'styled-components'
-import { SvgButton } from 'components/ui'
+import { SvgButton, InfiniteScroll } from 'components/ui'
 
 const StyledInfiniteScroll = styled(InfiniteScroll)`
     box-sizing: border-box;
-    height: 400px;
 `
 
 const TodoList = ({ categoryId }) => {

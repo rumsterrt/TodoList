@@ -1,9 +1,10 @@
 import styled, { css } from 'styled-components'
+import { theme } from 'styles/theme'
 
 export default styled.div`
     text-decoration: ${props => props.textDecoration || 'none'};;
     font-family: ${props => (!props.inherit ? 'inherit' : 'inherit')};
-    color: ${props => props.color || (!props.inherit ? '#ffa69e' : 'inherit')};
+    color: ${props => props.color || (!props.inherit ? theme.bg.default : 'inherit')};
     font-size: ${props => props.fontSize || (!props.inherit ? '14px' : 'inherit')};
     font-weight: ${props => props.fontWeight || (!props.inherit ? 'normal' : 'inherit')};
     padding: ${props => props.padding || 0};

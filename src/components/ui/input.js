@@ -8,7 +8,7 @@ const StyledInput = styled.input`
     height: 38px;
     color: ${() => theme.text.default};
     border-radius: 2px;
-    border: 1px solid ${props => (props.error ? theme.bg.error : '#ffa69e')};
+    border: 1px solid ${props => (props.error ? theme.bg.error : theme.bg.default)};
 
     font-size: 14px;
     font-weight: 400;
@@ -16,13 +16,13 @@ const StyledInput = styled.input`
     transition: all 500ms;
 
     &:hover {
-        border-color: ${props => (props.error ? theme.bg.error : '#d0469f')};
+        border-color: ${props => (props.error ? theme.bg.error : theme.bg.border)};
     }
 
     &:focus {
         outline: none;
-        box-shadow: 0 0 5px 1px ${props => (props.error ? theme.bg.error : '#ffa69e')};
-        border-color: ${props => (props.error ? theme.bg.error : '#d0469f')};
+        box-shadow: 0 0 5px 1px ${props => (props.error ? theme.bg.error : theme.bg.default)};
+        border-color: ${props => (props.error ? theme.bg.error : theme.bg.border)};
     }
     ${props =>
         props.readOnly &&

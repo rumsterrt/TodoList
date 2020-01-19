@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { theme } from 'styles/theme'
 
 const Checkbox = styled.label`
     display: block;
@@ -32,7 +33,7 @@ const Checkbox = styled.label`
     }
 
     input:checked ~ span {
-        background-color: #2196f3;
+        background-color: ${theme.bg.border};
     }
 
     span:after {

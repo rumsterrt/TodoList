@@ -7,5 +7,6 @@ import Card, { CardItem } from './card'
 import Checkbox from './checkbox'
 import ProgressBar from './progressBar'
 import Page from './page'
+import InfiniteScroll from './infiniteScroll'
 
-export { InputField, Button, Input, SvgButton, Text, Flex, CardItem, Card, Checkbox, ProgressBar, Page }
+export { InputField, Button, Input, SvgButton, Text, Flex, CardItem, Card, Checkbox, ProgressBar, Page, InfiniteScroll }

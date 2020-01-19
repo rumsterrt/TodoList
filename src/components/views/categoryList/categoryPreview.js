@@ -4,13 +4,15 @@ import { Text } from 'components/ui'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import _get from 'lodash/get'
+import { theme } from 'styles/theme'
 
 const PreviewStyled = styled.div`
     flex: 0 0 auto;
     width: calc(100% / 3 - 20px / 3);
     background-color: white;
     border-radius: 5px;
-    background: ${({ percent }) => `linear-gradient(to right, #ffa69e 0%, #d0469f ${percent}%, white ${percent}%)`};
+    background: ${({ percent }) =>
+        `linear-gradient(to right, ${theme.bg.default} 0%, ${theme.bg.border} ${percent}%, ${theme.bg.reverse} ${percent}%)`};
     text-align: center;
     font-size: 30px;
 

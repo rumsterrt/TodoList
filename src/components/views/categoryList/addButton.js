@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { SvgButton } from 'components/ui'
 import { useHistory } from 'react-router-dom'
+import { theme } from 'styles/theme'
 
 const AddButtonStyled = styled(SvgButton)`
     flex: 0 0 auto;
@@ -12,21 +13,21 @@ const AddButtonStyled = styled(SvgButton)`
     text-align: center;
     font-size: 30px;
 
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: none;
+
     &:not(:last-child) {
         margin-right: 20px;
     }
 
     &:hover {
-        box-shadow: none;
-
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         svg {
-            fill: #d0469f;
+            fill: ${theme.bg.border};
         }
     }
 
     svg {
-        fill: #ffa69e;
+        fill: ${theme.bg.default};
 
         transition: 1.25s;
     }

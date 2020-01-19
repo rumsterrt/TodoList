@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Flex from './flex'
 import Text from './text'
+import { theme } from 'styles/theme'
 
 const StyledProgressBar = styled.div`
     height: 5px;
@@ -12,7 +13,7 @@ const StyledProgressBar = styled.div`
     & span {
         display: block;
         width: ${({ percent }) => (percent || 0) + '%'};
-        background-color: pink;
+        background-color: ${theme.bg.border};
         transition: 0.25s;
         position: relative;
         overflow: hidden;
@@ -28,7 +29,7 @@ const ProgressBar = ({ percent, className }) => {
                 <span />
             </StyledProgressBar>
 
-            <Text color={'pink'} marginLeft="10px">
+            <Text color={theme.bg.border} fontSize="25px" marginLeft="10px">
                 {percent + '%'}
             </Text>
         </Flex>
