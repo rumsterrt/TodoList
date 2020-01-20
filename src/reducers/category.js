@@ -62,7 +62,7 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isLoading: false,
-                items: { ...state.items, [payload.id]: payload },
+                items: { ...state.items, [payload.id]: { ...payload, totalTodos: 0, completeTodos: 0 } },
                 nodes: [...state.nodes, payload.id],
             }
 

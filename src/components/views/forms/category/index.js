@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Formik, Form } from 'formik'
-import { SvgButton, Flex, Text, InputField, Card, CardItem, Button, Page } from 'components/ui'
+import { SvgButton, Flex, Text, InputField, Card, CardItem, Button, Page, Loader } from 'components/ui'
 import { addCategory, editCategory, getCategory } from 'actions/category'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -20,6 +20,8 @@ const Category = ({ categoryId }) => {
 
     const category = useSelector(state => (!categoryId ? {} : _get(state, `category.items.${categoryId}`) || {}))
 
+    const isLoading = useSelector(state => _get(state, `category.isLoading`))
+
     const formik = {
         initialValues: {
             name: category.name || '',
@@ -27,6 +29,7 @@ const Category = ({ categoryId }) => {
         },
         onSubmit: values => {
             dispatch(categoryId ? editCategory({ ...values, id: categoryId }) : addCategory(values))
+            history.goBack()
         },
         validationSchema: CategorySchema,
         enableReinitialize: true,
@@ -74,6 +77,7 @@ const Category = ({ categoryId }) => {
                     </Card>
                 </Form>
             </Formik>
+            {isLoading && <Loader fullSize />}
         </Page>
     )
 }

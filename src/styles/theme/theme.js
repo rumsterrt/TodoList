@@ -1,4 +1,5 @@
 const theme = {
+    loader: '#d0469f',
     fg: {
         default: 'linear-gradient(326deg, #861657 0%, #ffa69e 74%)',
     },

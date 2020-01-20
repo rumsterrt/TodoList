@@ -3,7 +3,7 @@ import { getTodos, addTodo } from 'actions/todolist'
 import { useDispatch, useSelector } from 'react-redux'
 import TodoView from './todoView'
 import styled from 'styled-components'
-import { SvgButton, InfiniteScroll } from 'components/ui'
+import { SvgButton, InfiniteScroll, Loader } from 'components/ui'
 
 const StyledInfiniteScroll = styled(InfiniteScroll)`
     box-sizing: border-box;
@@ -47,6 +47,7 @@ const TodoList = ({ categoryId }) => {
                 {list.nodes.map(node => (
                     <TodoView key={node.id} {...node} />
                 ))}
+                {list.isLoading && <Loader />}
             </StyledInfiniteScroll>
         </Fragment>
     )

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
-import { SvgButton, Flex, Text, ProgressBar, Page } from 'components/ui'
+import { SvgButton, Flex, Text, ProgressBar, Page, Loader } from 'components/ui'
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import _get from 'lodash/get'
@@ -51,6 +51,7 @@ const Category = ({ id }) => {
                 percent={data && data.totalTodos > 0 ? parseInt((data.completeTodos / data.totalTodos) * 100) : 0}
             />
             <TodoList categoryId={id} />
+            {!data && <Loader fullSize />}
         </Page>
     )
 }

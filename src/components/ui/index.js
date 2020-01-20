@@ -8,5 +8,20 @@ import Checkbox from './checkbox'
 import ProgressBar from './progressBar'
 import Page from './page'
 import InfiniteScroll from './infiniteScroll'
+import Loader from './loader'
 
-export { InputField, Button, Input, SvgButton, Text, Flex, CardItem, Card, Checkbox, ProgressBar, Page, InfiniteScroll }
+export {
+    InputField,
+    Button,
+    Input,
+    SvgButton,
+    Text,
+    Flex,
+    CardItem,
+    Card,
+    Checkbox,
+    ProgressBar,
+    Page,
+    InfiniteScroll,
+    Loader,
+}

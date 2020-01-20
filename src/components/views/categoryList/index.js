@@ -4,7 +4,7 @@ import TodoListPreview from './categoryPreview'
 import AddButton from './addButton'
 import { useSelector, useDispatch } from 'react-redux'
 import { getCategories } from 'actions/category'
-import { InfiniteScroll } from 'components/ui'
+import { InfiniteScroll, Loader } from 'components/ui'
 
 const CategoryListStyled = styled(InfiniteScroll)`
     width: 100%;
@@ -36,6 +36,7 @@ const CategoryList = () => {
             {lists.nodes.map(id => (
                 <TodoListPreview key={id} totalTasks={100} id={id} />
             ))}
+            {lists.isLoading && <Loader />}
         </CategoryListStyled>
     )
 }
