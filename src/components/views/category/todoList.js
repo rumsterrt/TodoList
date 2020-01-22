@@ -28,6 +28,10 @@ const TodoList = ({ categoryId }) => {
         [dispatch, categoryId],
     )
 
+    if (list.error) {
+        return null
+    }
+
     return (
         <Fragment>
             {isAddNew ? (

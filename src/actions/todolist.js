@@ -32,8 +32,14 @@ export const addTodo = ({ categoryId, name }) => dispatch => {
     dispatch({
         type: actionTypes.ADD_TODO_REQUEST,
     })
-    return sendRequest({ endpoint: '/todos', method: API_CREATE, body: { name, categoryId } })
-        .then(({ data }) => {
+    return sendRequest({ endpoint: '/todos', method: API_CREATE, body: { name, categoryId } }).then(
+        ({ data, error }) => {
+            if (error) {
+                return dispatch({
+                    type: actionTypes.ADD_TODO_FAILURE,
+                    error,
+                })
+            }
             dispatch({
                 type: actionTypes.ADD_TODO_SUCCESS,
                 payload: { id: data.id, name, categoryId },
@@ -42,44 +48,44 @@ export const addTodo = ({ categoryId, name }) => dispatch => {
                 type: categoryActionTypes.UPDATE_TODOS_COUNT,
                 payload: { total: 1, categoryId },
             })
-        })
-        .catch(e => {
-            dispatch({
-                type: actionTypes.ADD_TODO_FAILURE,
-                error: e,
-            })
-        })
+        },
+    )
 }
 
 export const removeTodo = ({ id, categoryId, isDone }) => dispatch => {
     dispatch({
         type: actionTypes.REMOVE_TODO_REQUEST,
     })
-    return sendRequest({ endpoint: `/todos/${id}`, method: API_DELETE })
-        .then(({ data }) => {
-            dispatch({
-                type: actionTypes.REMOVE_TODO_SUCCESS,
-                payload: { data, id, categoryId },
-            })
-            dispatch({
-                type: categoryActionTypes.UPDATE_TODOS_COUNT,
-                payload: { total: -1, complete: isDone ? -1 : 0, categoryId },
-            })
-        })
-        .catch(e => {
-            dispatch({
+    return sendRequest({ endpoint: `/todos/${id}`, method: API_DELETE }).then(({ data, error }) => {
+        if (error) {
+            return dispatch({
                 type: actionTypes.REMOVE_TODO_FAILURE,
-                error: e,
+                error,
             })
+        }
+        dispatch({
+            type: actionTypes.REMOVE_TODO_SUCCESS,
+            payload: { data, id, categoryId },
         })
+        dispatch({
+            type: categoryActionTypes.UPDATE_TODOS_COUNT,
+            payload: { total: -1, complete: isDone ? -1 : 0, categoryId },
+        })
+    })
 }
 
 export const editTodo = ({ id, categoryId, name, isDone }) => dispatch => {
     dispatch({
         type: actionTypes.EDIT_TODO_REQUEST,
     })
-    return sendRequest({ endpoint: `/todos/${id}`, method: API_UPDATE, body: { name, isDone, id } })
-        .then(() => {
+    return sendRequest({ endpoint: `/todos/${id}`, method: API_UPDATE, body: { name, isDone, id } }).then(
+        ({ data, error }) => {
+            if (error) {
+                return dispatch({
+                    type: actionTypes.EDIT_TODO_FAILURE,
+                    error,
+                })
+            }
             const fields = { name, isDone }
             Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key])
 
@@ -91,13 +97,8 @@ export const editTodo = ({ id, categoryId, name, isDone }) => dispatch => {
                 type: categoryActionTypes.UPDATE_TODOS_COUNT,
                 payload: { complete: isDone !== undefined ? (isDone ? 1 : -1) : 0, categoryId },
             })
-        })
-        .catch(e => {
-            dispatch({
-                type: actionTypes.EDIT_TODO_FAILURE,
-                error: e,
-            })
-        })
+        },
+    )
 }
 
 export const getTodos = ({ offset, limit, categoryId }) => dispatch => {
@@ -106,20 +107,21 @@ export const getTodos = ({ offset, limit, categoryId }) => dispatch => {
         payload: { categoryId },
     })
 
-    return sendRequest({ endpoint: `/todos`, method: API_READ, body: { offset, limit, categoryId } })
-        .then(({ data }) => {
+    return sendRequest({ endpoint: `/todos`, method: API_READ, body: { offset, limit, categoryId } }).then(
+        ({ data, error }) => {
+            if (error) {
+                return dispatch({
+                    type: actionTypes.GET_TODOS_FAILURE,
+                    error,
+                    payload: { categoryId },
+                })
+            }
             dispatch({
                 type: actionTypes.GET_TODOS_SUCCESS,
                 payload: { nodes: data.nodes, offset, limit, categoryId },
             })
-        })
-        .catch(e => {
-            dispatch({
-                type: actionTypes.GET_TODOS_FAILURE,
-                error: e,
-                payload: { categoryId },
-            })
-        })
+        },
+    )
 }
 
 export const getTodo = ({ id }) => dispatch => {
@@ -127,17 +129,16 @@ export const getTodo = ({ id }) => dispatch => {
         type: actionTypes.GET_TODO_REQUEST,
     })
 
-    return sendRequest({ endpoint: `/todos`, method: API_READ, body: { id } })
-        .then(({ data }) => {
-            dispatch({
-                type: actionTypes.GET_TODO_SUCCESS,
-                payload: { node: data.node },
-            })
-        })
-        .catch(e => {
-            dispatch({
+    return sendRequest({ endpoint: `/todos`, method: API_READ, body: { id } }).then(({ data, error }) => {
+        if (error) {
+            return dispatch({
                 type: actionTypes.GET_TODO_FAILURE,
-                error: e,
+                error,
             })
+        }
+        dispatch({
+            type: actionTypes.GET_TODO_SUCCESS,
+            payload: { node: data.node },
         })
+    })
 }

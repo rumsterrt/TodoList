@@ -5,6 +5,7 @@ import AddButton from './addButton'
 import { useSelector, useDispatch } from 'react-redux'
 import { getCategories } from 'actions/category'
 import { InfiniteScroll, Loader } from 'components/ui'
+import _get from 'lodash/get'
 
 const CategoryListStyled = styled(InfiniteScroll)`
     width: 100%;
@@ -19,10 +20,14 @@ const CategoryListStyled = styled(InfiniteScroll)`
 
 const CategoryList = () => {
     const dispatch = useDispatch()
-    const lists = useSelector(state => state.category || {}),
+    const lists = useSelector(state => _get(state, 'category.nodes', {})),
         loadMore = useCallback(() => {
-            dispatch(getCategories({ offset: lists.nodes.length, limit: 4 }))
+            dispatch(getCategories({ offset: _get(lists, 'items.length', 0), limit: 4 }))
         }, [dispatch, lists])
+
+    if (lists.error) {
+        return null
+    }
 
     return (
         <CategoryListStyled
@@ -33,7 +38,7 @@ const CategoryList = () => {
             isLoading={lists.isLoading}
         >
             <AddButton />
-            {lists.nodes.map(id => (
+            {lists.items.map(id => (
                 <TodoListPreview key={id} totalTasks={100} id={id} />
             ))}
             {lists.isLoading && <Loader />}

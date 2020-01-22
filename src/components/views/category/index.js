@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import { SvgButton, Flex, Text, ProgressBar, Page, Loader } from 'components/ui'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import _get from 'lodash/get'
 import { removeCategory, getCategory } from 'actions/category'
@@ -8,17 +8,19 @@ import _isEmpty from 'lodash/isEmpty'
 import TodoList from './todoList'
 
 const Category = ({ id }) => {
-    const data = useSelector(state => _get(state, `category.items.${id}`, {}), shallowEqual),
+    const data = useSelector(state => _get(state, `category.items.${id}`, {})),
+        error = useSelector(state => _get(state, `category.error`)),
+        isFetching = useSelector(state => _get(state, `category.isFetching`)),
         history = useHistory(),
         dispatch = useDispatch()
 
     useEffect(() => {
-        if (!_isEmpty(data)) {
+        if (!_isEmpty(data) || error || isFetching) {
             return
         }
 
         dispatch(getCategory({ id }))
-    }, [id, data, dispatch])
+    }, [id, data, dispatch, error, isFetching])
 
     const deleteHandler = useCallback(() => {
         dispatch(removeCategory({ id }))

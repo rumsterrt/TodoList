@@ -34,6 +34,7 @@ export default (state = getInitState(), action) => {
                     [payload.categoryId]: {
                         ...categodyOld,
                         isLoading: true,
+                        error: null,
                     },
                 },
             }
@@ -68,6 +69,7 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isFetching: true,
+                error: null,
             }
         case actionTypes.GET_TODO_SUCCESS:
             return {
@@ -92,6 +94,7 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isFetching: true,
+                error: null,
             }
 
         case actionTypes.ADD_TODO_SUCCESS:
@@ -118,6 +121,7 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isFetching: true,
+                error: null,
             }
 
         case actionTypes.REMOVE_TODO_SUCCESS:
@@ -144,6 +148,7 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isFetching: true,
+                error: null,
             }
 
         case actionTypes.EDIT_TODO_SUCCESS:

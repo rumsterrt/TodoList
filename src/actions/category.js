@@ -33,57 +33,58 @@ export const addCategory = ({ name, description }) => dispatch => {
     dispatch({
         type: actionTypes.ADD_CATEGORY_REQUEST,
     })
-    return sendRequest({ endpoint: '/lists', method: API_CREATE, body: { name, description } })
-        .then(({ data }) => {
+    return sendRequest({ endpoint: '/lists', method: API_CREATE, body: { name, description } }).then(
+        ({ data, error }) => {
+            if (error) {
+                return dispatch({
+                    type: actionTypes.ADD_CATEGORY_FAILURE,
+                    error,
+                })
+            }
             dispatch({
                 type: actionTypes.ADD_CATEGORY_SUCCESS,
                 payload: { id: data.id, name, description },
             })
-        })
-        .catch(e => {
-            dispatch({
-                type: actionTypes.ADD_CATEGORY_FAILURE,
-                error: e,
-            })
-        })
+        },
+    )
 }
 
 export const removeCategory = ({ id }) => dispatch => {
     dispatch({
         type: actionTypes.REMOVE_CATEGORY_REQUEST,
     })
-    return sendRequest({ endpoint: `/lists/${id}`, method: API_DELETE })
-        .then(({ data }) => {
-            dispatch({
-                type: actionTypes.REMOVE_CATEGORY_SUCCESS,
-                payload: { data, id },
-            })
-        })
-        .catch(e => {
-            dispatch({
+    return sendRequest({ endpoint: `/lists/${id}`, method: API_DELETE }).then(({ data, error }) => {
+        if (error) {
+            return dispatch({
                 type: actionTypes.REMOVE_CATEGORY_FAILURE,
-                error: e,
+                error,
             })
+        }
+        dispatch({
+            type: actionTypes.REMOVE_CATEGORY_SUCCESS,
+            payload: { data, id },
         })
+    })
 }
 
 export const editCategory = ({ id, name, description }) => dispatch => {
     dispatch({
         type: actionTypes.EDIT_CATEGORY_REQUEST,
     })
-    return sendRequest({ endpoint: `/lists/${id}`, method: API_UPDATE, body: { name, description } })
-        .then(({ data }) => {
+    return sendRequest({ endpoint: `/lists/${id}`, method: API_UPDATE, body: { name, description } }).then(
+        ({ data, error }) => {
+            if (error) {
+                return dispatch({
+                    type: actionTypes.EDIT_CATEGORY_FAILURE,
+                    error,
+                })
+            }
             dispatch({
                 type: actionTypes.EDIT_CATEGORY_SUCCESS,
                 payload: { id, name, description },
             })
-        })
-        .catch(e => {
-            dispatch({
-                type: actionTypes.EDIT_CATEGORY_FAILURE,
-                error: e,
-            })
-        })
+        },
+    )
 }
 
 export const getCategories = ({ offset, limit }) => dispatch => {
@@ -91,19 +92,18 @@ export const getCategories = ({ offset, limit }) => dispatch => {
         type: actionTypes.GET_CATEGORIES_REQUEST,
     })
 
-    return sendRequest({ endpoint: '/lists', method: API_READ, body: { offset, limit } })
-        .then(({ data }) => {
-            dispatch({
-                type: actionTypes.GET_CATEGORIES_SUCCESS,
-                payload: { nodes: data.nodes, offset, limit },
-            })
-        })
-        .catch(e => {
-            dispatch({
+    return sendRequest({ endpoint: '/lists', method: API_READ, body: { offset, limit } }).then(({ error, data }) => {
+        if (error) {
+            return dispatch({
                 type: actionTypes.GET_CATEGORIES_FAILURE,
-                error: e,
+                error,
             })
+        }
+        dispatch({
+            type: actionTypes.GET_CATEGORIES_SUCCESS,
+            payload: { nodes: data.nodes, offset, limit },
         })
+    })
 }
 
 export const getCategory = ({ id }) => dispatch => {
@@ -111,17 +111,16 @@ export const getCategory = ({ id }) => dispatch => {
         type: actionTypes.GET_CATEGORY_REQUEST,
     })
 
-    return sendRequest({ endpoint: `/lists`, method: API_READ, body: { id } })
-        .then(({ data }) => {
-            dispatch({
-                type: actionTypes.GET_CATEGORY_SUCCESS,
-                payload: { node: data.node },
-            })
-        })
-        .catch(e => {
-            dispatch({
+    return sendRequest({ endpoint: `/lists`, method: API_READ, body: { id } }).then(({ data, error }) => {
+        if (error) {
+            return dispatch({
                 type: actionTypes.GET_CATEGORY_FAILURE,
-                error: e,
+                error,
             })
+        }
+        dispatch({
+            type: actionTypes.GET_CATEGORY_SUCCESS,
+            payload: { node: data.node },
         })
+    })
 }

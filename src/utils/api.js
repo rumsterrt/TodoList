@@ -42,6 +42,12 @@ export const sendRequest = ({ endpoint, method, body, credentials, headers = {} 
         headers['Content-Type'] = 'application/json'
     }
 
+    const token = localStorage.getItem('jwt_token')
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+    }
+
     let preparedData = {
         method: httpMethod,
         url: fullUrl,
@@ -65,13 +71,24 @@ export const sendRequest = ({ endpoint, method, body, credentials, headers = {} 
             return {
                 headers: response.headers,
                 data: response.data,
+                status: response.status,
             }
         })
         .then(
             response => ({ ...response }),
-            error => ({
-                error: (error && error.message) || error || 'Unknown error',
-                response: error.data || {},
-            }),
+            error => {
+                const { response = {} } = error || {}
+
+                if (response.status === API_STATUS.UNAUTHORIZED) {
+                    localStorage.removeItem('jwt_token')
+                    // eslint-disable-next-line
+                    location.reload(true)
+                }
+
+                return {
+                    error: (error && error.message) || error || 'Unknown error',
+                    response: error.data || {},
+                }
+            },
         )
 }

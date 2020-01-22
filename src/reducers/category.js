@@ -3,11 +3,15 @@ import uniq from 'lodash/uniq'
 
 const getInitState = () => ({
     items: {}, //id => category
-    nodes: [], //ids for pagination
-    isLoading: false,
-    hasMore: true,
+    nodes: {
+        //ids for pagination
+        items: [],
+        isLoading: false,
+        hasMore: true,
+        error: null,
+    },
+    isFetching: false,
     error: null,
-    page: 0,
 })
 
 export default (state = getInitState(), action) => {
@@ -17,72 +21,88 @@ export default (state = getInitState(), action) => {
         case actionTypes.GET_CATEGORIES_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                nodes: {
+                    ...state.nodes,
+                    isLoading: true,
+                    error: null,
+                },
+                isFetching: true,
             }
         case actionTypes.GET_CATEGORIES_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
-                nodes: uniq([...state.nodes, ...payload.nodes.map(node => node.id)]),
+                nodes: {
+                    ...state.nodes,
+                    items: uniq([...state.nodes.items, ...payload.nodes.map(node => node.id)]),
+                    isLoading: false,
+                    hasMore: payload.nodes.length === payload.limit,
+                },
                 items: { ...state.items, ...payload.nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {}) },
-                hasMore: payload.nodes.length === payload.limit,
+                isFetching: false,
             }
         case actionTypes.GET_CATEGORIES_FAILURE:
             return {
                 ...state,
-                isLoading: false,
-                error: action.error,
+                nodes: {
+                    ...state.nodes,
+                    isLoading: false,
+                    error: action.error,
+                },
+                isFetching: false,
             }
 
         case actionTypes.GET_CATEGORY_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                isFetching: true,
+                error: null,
             }
         case actionTypes.GET_CATEGORY_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 items: { ...state.items, [payload.node.id]: payload.node },
             }
         case actionTypes.GET_CATEGORY_FAILURE:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 error: action.error,
             }
 
         case actionTypes.ADD_CATEGORY_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                isFetching: true,
+                error: null,
             }
 
         case actionTypes.ADD_CATEGORY_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 items: { ...state.items, [payload.id]: { ...payload, totalTodos: 0, completeTodos: 0 } },
-                nodes: [...state.nodes, payload.id],
+                nodes: { ...state.nodes, items: [...state.nodes.items, payload.id] },
             }
 
         case actionTypes.ADD_CATEGORY_FAILURE:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 error: action.error,
             }
 
         case actionTypes.REMOVE_CATEGORY_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                isFetching: true,
+                error: null,
             }
 
         case actionTypes.REMOVE_CATEGORY_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 nodes: state.nodes.filter(item => item !== +payload.id),
                 items: { ...state.items, [payload.id]: undefined },
             }
@@ -90,31 +110,34 @@ export default (state = getInitState(), action) => {
         case actionTypes.REMOVE_CATEGORY_FAILURE:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 error: action.error,
             }
 
         case actionTypes.EDIT_CATEGORY_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                isFetching: true,
+                error: null,
             }
 
         case actionTypes.EDIT_CATEGORY_SUCCESS:
-            const items = state.items
-
-            items[payload.id] = payload
-
             return {
                 ...state,
-                isLoading: false,
-                items,
+                isFetching: false,
+                items: {
+                    ...state.items,
+                    [payload.id]: {
+                        ...state.items[payload.id],
+                        ...payload,
+                    },
+                },
             }
 
         case actionTypes.EDIT_CATEGORY_FAILURE:
             return {
                 ...state,
-                isLoading: false,
+                isFetching: false,
                 error: action.error,
             }
 
@@ -131,8 +154,8 @@ export default (state = getInitState(), action) => {
                     ...state.items,
                     [payload.categoryId]: {
                         ...item,
-                        totalTodos: item.totalTodos + (payload.total || 0),
-                        completeTodos: item.completeTodos + (payload.complete || 0),
+                        totalTodos: (item.totalTodos || 0) + (payload.total || 0),
+                        completeTodos: (item.completeTodos || 0) + (payload.complete || 0),
                     },
                 },
             }
