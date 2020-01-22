@@ -7,8 +7,7 @@ import _get from 'lodash/get'
 import { theme } from 'styles/theme'
 
 const PreviewStyled = styled.div`
-    flex: 0 0 auto;
-    width: calc(100% / 3 - 20px / 3);
+    flex: 0 0 min(400px, 100%);
     background-color: white;
     border-radius: 5px;
     background: ${({ percent }) =>

@@ -5,6 +5,7 @@ import FieldWithError from './fieldWithError'
 
 const StyledInput = styled.input`
     width: 100%;
+    box-sizing: border-box;
     height: 38px;
     color: ${() => theme.text.default};
     border-radius: 2px;

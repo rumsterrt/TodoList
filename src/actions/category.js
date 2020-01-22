@@ -87,23 +87,25 @@ export const editCategory = ({ id, name, description }) => dispatch => {
     )
 }
 
-export const getCategories = ({ offset, limit }) => dispatch => {
+export const getCategories = ({ offset, limit, filter }) => dispatch => {
     dispatch({
         type: actionTypes.GET_CATEGORIES_REQUEST,
     })
 
-    return sendRequest({ endpoint: '/lists', method: API_READ, body: { offset, limit } }).then(({ error, data }) => {
-        if (error) {
-            return dispatch({
-                type: actionTypes.GET_CATEGORIES_FAILURE,
-                error,
+    return sendRequest({ endpoint: '/lists', method: API_READ, body: { offset, limit, filter } }).then(
+        ({ error, data }) => {
+            if (error) {
+                return dispatch({
+                    type: actionTypes.GET_CATEGORIES_FAILURE,
+                    error,
+                })
+            }
+            dispatch({
+                type: actionTypes.GET_CATEGORIES_SUCCESS,
+                payload: { nodes: data.nodes, offset, limit, filter },
             })
-        }
-        dispatch({
-            type: actionTypes.GET_CATEGORIES_SUCCESS,
-            payload: { nodes: data.nodes, offset, limit },
-        })
-    })
+        },
+    )
 }
 
 export const getCategory = ({ id }) => dispatch => {

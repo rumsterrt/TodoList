@@ -9,6 +9,7 @@ import ProgressBar from './progressBar'
 import Page from './page'
 import InfiniteScroll from './infiniteScroll'
 import Loader from './loader'
+import SearchInput from './searchInput'
 
 export {
     InputField,
@@ -24,4 +25,5 @@ export {
     Page,
     InfiniteScroll,
     Loader,
+    SearchInput,
 }

@@ -9,6 +9,7 @@ const getInitState = () => ({
         isLoading: false,
         hasMore: true,
         error: null,
+        filter: null,
     },
     isFetching: false,
     error: null,
@@ -29,13 +30,19 @@ export default (state = getInitState(), action) => {
                 isFetching: true,
             }
         case actionTypes.GET_CATEGORIES_SUCCESS:
+            const nodes =
+                state.nodes.filter === payload.filter
+                    ? uniq([...state.nodes.items, ...payload.nodes.map(node => node.id)])
+                    : payload.nodes.map(node => node.id)
+
             return {
                 ...state,
                 nodes: {
                     ...state.nodes,
-                    items: uniq([...state.nodes.items, ...payload.nodes.map(node => node.id)]),
+                    items: nodes,
                     isLoading: false,
                     hasMore: payload.nodes.length === payload.limit,
+                    filter: payload.filter,
                 },
                 items: { ...state.items, ...payload.nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {}) },
                 isFetching: false,
@@ -103,7 +110,10 @@ export default (state = getInitState(), action) => {
             return {
                 ...state,
                 isFetching: false,
-                nodes: state.nodes.filter(item => item !== +payload.id),
+                nodes: {
+                    ...state.nodes,
+                    items: state.nodes.items.filter(item => item !== +payload.id),
+                },
                 items: { ...state.items, [payload.id]: undefined },
             }
 
@@ -157,6 +167,18 @@ export default (state = getInitState(), action) => {
                         totalTodos: (item.totalTodos || 0) + (payload.total || 0),
                         completeTodos: (item.completeTodos || 0) + (payload.complete || 0),
                     },
+                },
+            }
+
+        case actionTypes.UPDATE_LIST_FILTER:
+            return {
+                ...state,
+                nodes: {
+                    ...state.nodes,
+                    items: [],
+                    hasMore: true,
+                    error: null,
+                    filter: payload.filter,
                 },
             }
 

@@ -3,8 +3,6 @@ import styled from 'styled-components'
 import _throttle from 'lodash/throttle'
 
 const List = styled.div`
-    width: 100%;
-
     display: flex;
     flex-direction: ${({ type }) => (type === 'vertical' ? 'column' : 'row')};
     flex-wrap: nowrap;

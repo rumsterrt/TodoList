@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { theme } from 'styles/theme'
 
 const AddButtonStyled = styled(SvgButton)`
-    flex: 0 0 auto;
+    flex: 0 0 min(300px, 100%);
     height: 100%;
     width: calc(100% / 3 - 20px / 3);
     background-color: white;
