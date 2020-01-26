@@ -1,18 +1,10 @@
 import React, { useEffect } from 'react'
-import { Formik, Form } from 'formik'
-import { SvgButton, Flex, Text, InputField, Card, CardItem, Button, Page, Loader } from 'components/ui'
+import { SvgButton, Flex, Text, Page, Loader } from 'components/ui'
 import { addCategory, editCategory, getCategory } from 'actions/category'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import * as Yup from 'yup'
 import _get from 'lodash/get'
-
-const CategorySchema = () =>
-    Yup.object().shape({
-        name: Yup.string()
-            .min(2, 'Too short!')
-            .required('Required'),
-    })
+import EditForm from './editForm'
 
 const Category = ({ categoryId }) => {
     const dispatch = useDispatch(),
@@ -22,18 +14,13 @@ const Category = ({ categoryId }) => {
 
     const isLoading = useSelector(state => _get(state, `category.isLoading`))
 
-    const formik = {
-        initialValues: {
-            name: category.name || '',
-            description: category.description || '',
-        },
-        onSubmit: values => {
+    const handleSubmit = React.useCallback(
+        values => {
             dispatch(categoryId ? editCategory({ ...values, id: categoryId }) : addCategory(values))
             history.goBack()
         },
-        validationSchema: CategorySchema,
-        enableReinitialize: true,
-    }
+        [categoryId, dispatch, history],
+    )
 
     useEffect(() => {
         if (!categoryId) {
@@ -58,25 +45,7 @@ const Category = ({ categoryId }) => {
             <Text fontSize="25px" textAlign="center">
                 {categoryId ? '' : 'Create new category for your tasks'}
             </Text>
-            <Formik {...formik}>
-                <Form>
-                    <Card noLabel id="create-category">
-                        <CardItem>
-                            <h3>Name</h3>
-                            <div>
-                                <InputField name="name" type="text" />
-                            </div>
-                        </CardItem>
-                        <CardItem>
-                            <h3>Description</h3>
-                            <div>
-                                <InputField name="description" type="text" />
-                            </div>
-                        </CardItem>
-                        <Button type="submit">Submit</Button>
-                    </Card>
-                </Form>
-            </Formik>
+            <EditForm category={category} onSubmit={handleSubmit} />
             {isLoading && <Loader fullSize />}
         </Page>
     )

@@ -30,7 +30,7 @@ const getTextColor = ({ containerWidth, containerPercent, containerPadding, elem
         textContWidth = containerWidth - 2 * containerPadding - elemMarginLeft, // text container width exclude padding
         textPercent = Math.max(percentWidth / textContWidth, 0) * 100 //text percent width
 
-    return `linear-gradient(to right, white ${textPercent}%, #d0469f ${textPercent}%)`
+    return `linear-gradient(to right, ${theme.bg.reverse} ${textPercent}%, ${theme.bg.border} ${textPercent}%)`
 }
 
 const CategoryPreview = ({ id, padding = 20 }) => {
