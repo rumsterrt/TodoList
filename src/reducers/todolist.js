@@ -39,6 +39,8 @@ export default (state = getInitState(), action) => {
                 },
             }
         case actionTypes.GET_TODOS_SUCCESS:
+            const newNodes = uniqBy([...categodyOld.nodes, ...payload.nodes], 'id')
+
             return {
                 ...state,
                 isFetching: false,
@@ -46,8 +48,8 @@ export default (state = getInitState(), action) => {
                     ...state.categories,
                     [payload.categoryId]: {
                         isLoading: false,
-                        nodes: uniqBy([...categodyOld.nodes, ...payload.nodes], 'id'),
-                        hasMore: payload.nodes.length === payload.limit,
+                        nodes: newNodes,
+                        hasMore: newNodes.length !== categodyOld.nodes.length,
                     },
                 },
             }

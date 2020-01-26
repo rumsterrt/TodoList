@@ -39,26 +39,20 @@ const App = () => {
     const { token } = useSelector(state => state.auth)
     const isAuth = !!token
 
-    if (!isAuth) {
-        return (
-            <Wrapper>
-                <Container>
+    return (
+        <Wrapper>
+            <Container>
+                {!isAuth ? (
                     <Switch>
                         <Route path="/auth" render={props => <Auth {...props} />} />
                         <Redirect to="/auth" />
                     </Switch>
-                </Container>
-            </Wrapper>
-        )
-    }
-
-    return (
-        <Wrapper>
-            <Container>
-                <Switch>
-                    <Route path="/categories" render={props => <Category {...props} />} />
-                    <Redirect to="/categories" />
-                </Switch>
+                ) : (
+                    <Switch>
+                        <Route path="/categories" render={props => <Category {...props} />} />
+                        <Redirect to="/categories" />
+                    </Switch>
+                )}
             </Container>
         </Wrapper>
     )

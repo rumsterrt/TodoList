@@ -41,7 +41,7 @@ export default (state = getInitState(), action) => {
                     ...state.nodes,
                     items: nodes,
                     isLoading: false,
-                    hasMore: payload.nodes.length === payload.limit,
+                    hasMore: nodes.length !== state.nodes.items.length,
                     filter: payload.filter,
                 },
                 items: { ...state.items, ...payload.nodes.reduce((acc, node) => ({ ...acc, [node.id]: node }), {}) },

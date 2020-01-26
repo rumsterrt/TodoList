@@ -15,7 +15,7 @@ const TodoView = ({ id, name, isDone, categoryId, onAddNew }) => {
     const dispatch = useDispatch()
 
     const [isEdit, setIsEdit] = useState(false)
-    const [nameEdit, setNameEdit] = useState(name)
+    const [nameEdit, setNameEdit] = useState(name || '')
 
     const onChangeTodo = useCallback(
         fields => {

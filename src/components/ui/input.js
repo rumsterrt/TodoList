@@ -33,7 +33,7 @@ const StyledInput = styled.input`
         `};
 
     &::placeholder {
-        opacity: 10%;
+        opacity: 40%;
     }
 `
 

@@ -15,7 +15,7 @@ const TodoList = ({ categoryId }) => {
     const list = useSelector(state => state.todolist.categories[categoryId] || state.todolist.template)
 
     const loadMoreTodos = useCallback(() => {
-        dispatch(getTodos({ categoryId, offset: list.nodes.length, limit: 1 }))
+        dispatch(getTodos({ categoryId, offset: list.nodes.length, limit: 4 }))
     }, [dispatch, categoryId, list])
 
     const [isAddNew, setIsAddNew] = useState(false)

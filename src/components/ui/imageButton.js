@@ -6,7 +6,6 @@ import { theme } from 'styles/theme'
 const Button = styled.button`
     position: relative;
     text-align: center;
-    overflow: hidden;
     background-color: transparent;
     border: none;
     height: 36px;

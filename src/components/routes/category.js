@@ -1,7 +1,7 @@
 import React from 'react'
-import Category from '../views/category'
-import CategoryList from '../views/categoryList'
-import EditCategory from '../views/forms/category'
+import Category from '../pages/category'
+import CategoryList from '../pages/categoryList'
+import EditCategory from '../pages/categoryEdit'
 import { Switch, Route } from 'react-router-dom'
 
 export default props => {
