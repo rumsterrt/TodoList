@@ -9,6 +9,7 @@ const StyledContainer = styled(Flex)`
     &:not(:last-child) {
         margin-bottom: 5px;
     }
+    cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `
 
 const TodoView = ({ id, name, isDone, categoryId, onAddNew }) => {
@@ -24,12 +25,19 @@ const TodoView = ({ id, name, isDone, categoryId, onAddNew }) => {
         [dispatch, id, categoryId],
     )
 
-    const onRemoveClick = useCallback(() => {
-        dispatch(removeTodo({ id, categoryId, isDone }))
-    }, [dispatch, id, categoryId, isDone])
+    const onRemoveClick = useCallback(
+        e => {
+            e.stopPropagation()
+            dispatch(removeTodo({ id, categoryId, isDone }))
+        },
+        [dispatch, id, categoryId, isDone],
+    )
 
     const onSaveEdit = useCallback(() => {
-        if (name === nameEdit || !nameEdit) {
+        if (!nameEdit) {
+            return
+        }
+        if (name === nameEdit) {
             setIsEdit(false)
             return
         }
@@ -41,15 +49,27 @@ const TodoView = ({ id, name, isDone, categoryId, onAddNew }) => {
         setIsEdit(false)
     }, [name, nameEdit, onChangeTodo, onAddNew])
 
+    const onEditClick = useCallback(
+        event => {
+            event.stopPropagation()
+            setIsEdit(true)
+        },
+        [setIsEdit],
+    )
+
     return (
-        <StyledContainer maxWidth align="center">
+        <StyledContainer
+            maxWidth
+            align="center"
+            onClick={!isEdit && !onAddNew ? onChangeTodo.bind(null, { isDone: !isDone }) : null}
+        >
             {!isEdit && !onAddNew ? (
                 <Fragment>
-                    <Checkbox checked={isDone} onChange={(e, checked) => onChangeTodo({ isDone: checked })} />
+                    <Checkbox checked={isDone} />
                     <Text flex="1 0 0" textDecoration={isDone ? 'line-through' : undefined}>
                         {name}
                     </Text>
-                    <SvgButton width="35px" symbol="edit_button" onClick={() => setIsEdit(true)} />
+                    <SvgButton width="35px" symbol="edit_button" onClick={onEditClick} />
                     <SvgButton width="35px" symbol="delete_button" onClick={onRemoveClick} />
                 </Fragment>
             ) : (
@@ -57,7 +77,14 @@ const TodoView = ({ id, name, isDone, categoryId, onAddNew }) => {
                     <Input
                         value={nameEdit}
                         placeholder={onAddNew ? 'Input new todo name' : ''}
-                        onChange={e => setNameEdit(e.target.value)}
+                        onChange={event => {
+                            setNameEdit(event.target.value)
+                        }}
+                        onKeyPress={event => {
+                            if (event.key === 'Enter') {
+                                onSaveEdit()
+                            }
+                        }}
                     />
                     <SvgButton width="35px" symbol="save_button" onClick={onSaveEdit} />
                 </Fragment>
